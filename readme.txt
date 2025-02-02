@@ -7,4 +7,5 @@
 还支持复制文件（夹）所在驱动器号（盘符）。
 
 使用方法：
-转到 https://github.com/IInspectable-Informal/CopyPathPlus，然后下载 bin-CopyPathPlus.zip，接着全部解压，按照说明操作即可。
+转到 https://github.com/IInspectable-Informal/CopyPathPlus/releases
+然后下载 bin-CopyPathPlus.zip，接着全部解压，按照说明操作即可。
