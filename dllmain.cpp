@@ -11,13 +11,16 @@ using ns winrt;
 using ns std;
 
 HMODULE g_HMD = nullptr;
+LPWSTR g_ModulePath = nullptr;
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, [[maybe_unused]]LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, [[maybe_unused]] LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        g_HMD = hModule; break;
+        g_HMD = hModule;
+        GetModuleFileNameW(hModule, g_ModulePath, MAX_PATH);
+        break;
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
@@ -45,9 +48,7 @@ class __declspec(uuid("D07AC24F-A624-4009-ABC4-7C298F79C5AC")) MenuRoot : public
 public:
     MenuRoot()
     {
-        wchar_t* path = new wchar_t[MAX_PATH];
-        GetModuleFileNameW(g_HMD, path, MAX_PATH);
-        Icon = (wstring(path) + (GetTheme() ? L",0" : L",1")).c_str();
+        Icon = (wstring(g_ModulePath) + (GetTheme() ? L",0" : L",1")).c_str();
         Title = L"复制路径+";
         Flags = ECF_HASSUBCOMMANDS;
         SubCmds =

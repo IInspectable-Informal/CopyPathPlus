@@ -15,9 +15,9 @@ class MenuItem : public winrt::implements<MenuItem, IExplorerCommand, IEnumExplo
 {
 public:
     MenuItem() = default;
-    MenuItem(LPCWSTR, LPCWSTR, EXPCMDFLAGS, EXPCMDSTATE, LPCWSTR, Action, SubCommands = {}, BOOL = true);
-    MenuItem(LPCWSTR, LPCWSTR, Action, EXPCMDSTATE = ECS_ENABLED, LPCWSTR = nullptr, BOOL = true);
-    MenuItem(LPCWSTR, LPCWSTR, SubCommands, EXPCMDSTATE = ECS_ENABLED, BOOL = true);
+    MenuItem(LPCWSTR, LPCWSTR, EXPCMDFLAGS, EXPCMDSTATE, LPCWSTR, Action, SubCommands = {});
+    MenuItem(LPCWSTR, LPCWSTR, Action, EXPCMDSTATE = ECS_ENABLED, LPCWSTR = nullptr);
+    MenuItem(LPCWSTR, LPCWSTR, SubCommands, EXPCMDSTATE = ECS_ENABLED);
 
     IExplorerCommand* GetPtr() { return this; }
 
@@ -42,7 +42,6 @@ public:
     LPCWSTR Title{ L"" };
     EXPCMDFLAGS Flags{ ECF_ISSEPARATOR };
 
-    BOOL BeSlow = true;
     EXPCMDSTATE CmdState{ ECS_ENABLED };
 
     LPCWSTR ToolTip{ L"" };
@@ -51,7 +50,7 @@ public:
 
     SubCommands SubCmds = {  };
 
-    void CommonInit(LPCWSTR, LPCWSTR, EXPCMDSTATE, LPCWSTR, BOOL);
+    void CommonInit(LPCWSTR, LPCWSTR, EXPCMDSTATE, LPCWSTR);
 
 private:
     ULONG i = 0;

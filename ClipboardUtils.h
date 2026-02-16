@@ -9,6 +9,8 @@
 #include <functional>
 #include <vector>
 
+constexpr wchar_t g_FailedWstr[] = L"Cannot get path.";
+
 enum GetPathOptions
 {
     Object,
@@ -29,14 +31,20 @@ std::vector<std::wstring> GetPaths(IShellItemArray* psiItemArray, GetPathOptions
 {
     std::vector<std::wstring> wstrs;
     unsigned long c = 0;
-    (*psiItemArray).GetCount(&c);
-    IShellItem* Item = nullptr;
+    psiItemArray->GetCount(&c);
     std::vector<wchar_t*> strs;
     strs.resize(c, nullptr);
     for (unsigned long i = 0; i < c; i++)
     {
-        (*psiItemArray).GetItemAt(i, &Item);
-        (*Item).GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &strs[i]);
+        IShellItem* Item = nullptr;
+        if (SUCCEEDED(psiItemArray->GetItemAt(i, &Item)))
+        {
+            if (FAILED(Item->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &strs[i])))
+            { strs[i] = const_cast<wchar_t*>(g_FailedWstr); }
+            Item->Release();
+        }
+        else
+        { strs[i] = const_cast<wchar_t*>(g_FailedWstr); }
     }
     for (wchar_t* const& str : strs)
     {
@@ -85,7 +93,7 @@ void CopyString(IShellItemArray* psiItemArray, GetPathOptions Option, bool AutoA
     std::wstring wstr;
     for (auto const& swstr : GetPaths(psiItemArray, Option))
     {
-        if (AutoAddQuots && HasSpaceWchar(swstr))
+        if (swstr != g_FailedWstr && AutoAddQuots && HasSpaceWchar(swstr))
         { wstr += L"\"" + swstr + L"\"\n"; }
         else { wstr += swstr + L"\n"; }
     } CopyToClipboard(wstr);
