@@ -8,10 +8,9 @@
 #include <winreg.h>
 
 using ns winrt;
-using ns std;
 
 HMODULE g_HMD = nullptr;
-LPWSTR g_ModulePath = nullptr;
+wchar_t g_ModulePath[MAX_PATH];
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, [[maybe_unused]] LPVOID lpReserved)
 {
@@ -48,7 +47,7 @@ class __declspec(uuid("D07AC24F-A624-4009-ABC4-7C298F79C5AC")) MenuRoot : public
 public:
     MenuRoot()
     {
-        Icon = (wstring(g_ModulePath) + (GetTheme() ? L",0" : L",1")).c_str();
+        Icon = std::wstring(g_ModulePath) + (GetTheme() ? L",0" : L",1");
         Title = L"复制路径+";
         Flags = ECF_HASSUBCOMMANDS;
         SubCmds =
@@ -91,7 +90,6 @@ public:
                 Action([this](IShellItemArray* psiItemArray)
                 { CopyString(psiItemArray, DriveLetter); })
             )
-
         };
     }
 };
@@ -102,7 +100,7 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv)
     {
         *ppv = nullptr;
         if (rclsid == __uuidof(MenuRoot))
-        { return make<ClassFactory<MenuRoot>>().as(riid, ppv); }
+        { return make_self<ClassFactory<MenuRoot>>().as(riid, ppv); }
         return CLASS_E_CLASSNOTAVAILABLE;
     }
     catch (...)

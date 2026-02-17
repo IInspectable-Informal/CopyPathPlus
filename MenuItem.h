@@ -15,9 +15,9 @@ class MenuItem : public winrt::implements<MenuItem, IExplorerCommand, IEnumExplo
 {
 public:
     MenuItem() = default;
-    MenuItem(LPCWSTR, LPCWSTR, EXPCMDFLAGS, EXPCMDSTATE, LPCWSTR, Action, SubCommands = {});
-    MenuItem(LPCWSTR, LPCWSTR, Action, EXPCMDSTATE = ECS_ENABLED, LPCWSTR = nullptr);
-    MenuItem(LPCWSTR, LPCWSTR, SubCommands, EXPCMDSTATE = ECS_ENABLED);
+    MenuItem(std::wstring, std::wstring, EXPCMDFLAGS, EXPCMDSTATE, std::wstring, Action, SubCommands = {});
+    MenuItem(std::wstring, std::wstring, Action, EXPCMDSTATE = ECS_ENABLED, std::wstring = L"");
+    MenuItem(std::wstring, std::wstring, SubCommands, EXPCMDSTATE = ECS_ENABLED);
 
     IExplorerCommand* GetPtr() { return this; }
 
@@ -37,21 +37,22 @@ public:
     HRESULT __stdcall Clone(IEnumExplorerCommand**);
     HRESULT __stdcall Skip(ULONG);
 
+protected:
     //Properties
-    LPCWSTR Icon{ L"" };
-    LPCWSTR Title{ L"" };
+    std::wstring Icon{ L"" };
+    std::wstring Title{ L"" };
     EXPCMDFLAGS Flags{ ECF_ISSEPARATOR };
 
     EXPCMDSTATE CmdState{ ECS_ENABLED };
 
-    LPCWSTR ToolTip{ L"" };
+    std::wstring ToolTip{ L"" };
 
     Action Event;
 
     SubCommands SubCmds = {  };
 
-    void CommonInit(LPCWSTR, LPCWSTR, EXPCMDSTATE, LPCWSTR);
-
 private:
+    void CommonInit(std::wstring, std::wstring, EXPCMDSTATE, std::wstring);
+
     ULONG i = 0;
 };

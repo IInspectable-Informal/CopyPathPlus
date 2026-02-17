@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MenuItem.h"
 
-MenuItem::MenuItem(LPCWSTR i_Icon, LPCWSTR i_Title, EXPCMDFLAGS i_Flags, EXPCMDSTATE i_CmdState, LPCWSTR i_ToolTip, Action i_Event, SubCommands i_SubCmds)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, EXPCMDFLAGS i_Flags, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip, Action i_Event, SubCommands i_SubCmds)
 {
     CommonInit(i_Icon, i_Title, i_CmdState, i_ToolTip);
     Flags = i_Flags;
@@ -9,21 +9,21 @@ MenuItem::MenuItem(LPCWSTR i_Icon, LPCWSTR i_Title, EXPCMDFLAGS i_Flags, EXPCMDS
     SubCmds = i_SubCmds;
 }
 
-MenuItem::MenuItem(LPCWSTR i_Icon, LPCWSTR i_Title, Action i_Event, EXPCMDSTATE i_CmdState, LPCWSTR i_ToolTip)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, Action i_Event, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip)
 {
     CommonInit(i_Icon, i_Title, i_CmdState, i_ToolTip);
     Flags = ECF_DEFAULT;
     Event = i_Event;
 }
 
-MenuItem::MenuItem(LPCWSTR i_Icon, LPCWSTR i_Title, SubCommands i_SubCmds, EXPCMDSTATE i_CmdState)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, SubCommands i_SubCmds, EXPCMDSTATE i_CmdState)
 {
     CommonInit(i_Icon, i_Title, i_CmdState, nullptr);
     Flags = ECF_HASSUBCOMMANDS;
     SubCmds = i_SubCmds;
 }
 
-void MenuItem::CommonInit(LPCWSTR i_Icon, LPCWSTR i_Title, EXPCMDSTATE i_CmdState, LPCWSTR i_ToolTip)
+void MenuItem::CommonInit(std::wstring i_Icon, std::wstring i_Title, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip)
 {
     Icon = i_Icon;
     Title = i_Title;
@@ -34,17 +34,22 @@ void MenuItem::CommonInit(LPCWSTR i_Icon, LPCWSTR i_Title, EXPCMDSTATE i_CmdStat
 //IExplorerCommand
 HRESULT MenuItem::GetIcon(IShellItemArray*, LPWSTR* p_Icon)
 {
-    return SHStrDup(Icon, p_Icon);
+    if (Flags == ECF_ISSEPARATOR)
+    {
+        *p_Icon = nullptr;
+        return S_FALSE;
+    }
+    return SHStrDup(Icon.c_str(), p_Icon);
 }
 
 HRESULT MenuItem::GetTitle(IShellItemArray*, LPWSTR* p_Title)
 {
     if (Flags == ECF_ISSEPARATOR)
     {
-        p_Title = nullptr;
+        *p_Title = nullptr;
         return S_FALSE;
     }
-    return SHStrDup(Title, p_Title);
+    return SHStrDup(Title.c_str(), p_Title);
 }
 
 HRESULT MenuItem::GetFlags(EXPCMDFLAGS* pFlags)
@@ -61,7 +66,7 @@ HRESULT MenuItem::GetState(IShellItemArray*, [[maybe_unused]] BOOL fOkToBeSlow, 
 
 HRESULT MenuItem::GetToolTip(IShellItemArray*, LPWSTR* p_InfoTip)
 {
-    return SHStrDup(ToolTip, p_InfoTip);
+    return SHStrDup(ToolTip.c_str(), p_InfoTip);
 }
 
 HRESULT MenuItem::Invoke(IShellItemArray* psiItemArray, IBindCtx*)
@@ -89,9 +94,8 @@ HRESULT MenuItem::EnumSubCommands(IEnumExplorerCommand** pp_Enum)
     }
 }
 
-HRESULT MenuItem::GetCanonicalName(GUID* pguidCommandName)
+HRESULT MenuItem::GetCanonicalName([[maybe_unused]] GUID* pguidCommandName)
 {
-    pguidCommandName = nullptr;
     return E_NOTIMPL;
 }
 
