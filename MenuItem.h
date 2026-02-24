@@ -8,16 +8,16 @@
 //STL
 #include <functional>
 
-typedef std::function<void(IShellItemArray*)> Action;
-typedef std::vector<winrt::com_ptr<IExplorerCommand>> SubCommands;
+using Action = std::function<void(IShellItemArray*)>;
+using SubCommands = std::vector<winrt::com_ptr<IExplorerCommand>>;
 
 class MenuItem : public winrt::implements<MenuItem, IExplorerCommand, IEnumExplorerCommand>
 {
 public:
     MenuItem() = default;
-    MenuItem(std::wstring, std::wstring, EXPCMDFLAGS, EXPCMDSTATE, std::wstring, Action, SubCommands = {});
-    MenuItem(std::wstring, std::wstring, Action, EXPCMDSTATE = ECS_ENABLED, std::wstring = L"");
-    MenuItem(std::wstring, std::wstring, SubCommands, EXPCMDSTATE = ECS_ENABLED);
+    MenuItem(std::wstring, std::wstring, EXPCMDFLAGS, EXPCMDSTATE, std::wstring, const Action&, const SubCommands& = {});
+    MenuItem(std::wstring, std::wstring, const Action&, EXPCMDSTATE = ECS_ENABLED, std::wstring = L"");
+    MenuItem(std::wstring, std::wstring, const SubCommands&, EXPCMDSTATE = ECS_ENABLED);
 
     IExplorerCommand* GetPtr() { return this; }
 
@@ -52,7 +52,7 @@ protected:
     SubCommands SubCmds = {  };
 
 private:
-    void CommonInit(std::wstring, std::wstring, EXPCMDSTATE, std::wstring);
+    void CommonInit(std::wstring, std::wstring, EXPCMDSTATE);
 
     ULONG i = 0;
 };

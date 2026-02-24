@@ -1,34 +1,42 @@
 #include "pch.h"
 #include "MenuItem.h"
 
-MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, EXPCMDFLAGS i_Flags, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip, Action i_Event, SubCommands i_SubCmds)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title,
+                   EXPCMDFLAGS i_Flags, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip,
+                   const Action& i_Event, const SubCommands& i_SubCmds) :
+    Event(std::move(i_Event)) ,
+    SubCmds(std::move(i_SubCmds))
 {
-    CommonInit(i_Icon, i_Title, i_CmdState, i_ToolTip);
+    CommonInit(i_Icon, i_Title, i_CmdState);
     Flags = i_Flags;
-    Event = i_Event;
-    SubCmds = i_SubCmds;
+    ToolTip = i_ToolTip;
 }
 
-MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, Action i_Event, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title,
+                   const Action& i_Event,
+                   EXPCMDSTATE i_CmdState, std::wstring i_ToolTip) :
+    Event(std::move(i_Event))
 {
-    CommonInit(i_Icon, i_Title, i_CmdState, i_ToolTip);
+    CommonInit(i_Icon, i_Title, i_CmdState);
     Flags = ECF_DEFAULT;
     Event = i_Event;
+    ToolTip = i_ToolTip;
 }
 
-MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title, SubCommands i_SubCmds, EXPCMDSTATE i_CmdState)
+MenuItem::MenuItem(std::wstring i_Icon, std::wstring i_Title,
+                   const SubCommands& i_SubCmds,
+                   EXPCMDSTATE i_CmdState) :
+    SubCmds(std::move(i_SubCmds))
 {
-    CommonInit(i_Icon, i_Title, i_CmdState, nullptr);
+    CommonInit(i_Icon, i_Title, i_CmdState);
     Flags = ECF_HASSUBCOMMANDS;
-    SubCmds = i_SubCmds;
 }
 
-void MenuItem::CommonInit(std::wstring i_Icon, std::wstring i_Title, EXPCMDSTATE i_CmdState, std::wstring i_ToolTip)
+void MenuItem::CommonInit(std::wstring i_Icon, std::wstring i_Title, EXPCMDSTATE i_CmdState)
 {
     Icon = i_Icon;
     Title = i_Title;
     CmdState = i_CmdState;
-    ToolTip = i_ToolTip;
 }
 
 //IExplorerCommand
@@ -102,11 +110,13 @@ HRESULT MenuItem::GetCanonicalName([[maybe_unused]] GUID* pguidCommandName)
 //IEnumExplorerCommand
 HRESULT MenuItem::Next(ULONG celt, __out_ecount_part(celt, *pceltFetched) IExplorerCommand** pp_Command, ULONG* pceltFetched)
 {
+    IExplorerCommand** commands = pp_Command;
     ULONG fetched = 0;
     while (i < SubCmds.size() && fetched < celt)
     {
-        pp_Command[0] = SubCmds[i].get();
-        pp_Command[0]->AddRef();
+        *commands = SubCmds[i].get();
+        (*commands)->AddRef();
+        ++commands;
         ++fetched;
         ++i;
     }
