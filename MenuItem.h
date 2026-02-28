@@ -1,12 +1,4 @@
 #pragma once
-#include "pch.h"
-
-//Windows
-#include <Shlwapi.h>
-#pragma comment(lib, "shlwapi.lib")
-
-//STL
-#include <functional>
 
 using Action = std::function<void(IShellItemArray*)>;
 using SubCommands = std::vector<winrt::com_ptr<IExplorerCommand>>;
@@ -14,45 +6,37 @@ using SubCommands = std::vector<winrt::com_ptr<IExplorerCommand>>;
 class MenuItem : public winrt::implements<MenuItem, IExplorerCommand, IEnumExplorerCommand>
 {
 public:
-    MenuItem() = default;
-    MenuItem(std::wstring, std::wstring, EXPCMDFLAGS, EXPCMDSTATE, std::wstring, const Action&, const SubCommands& = {});
-    MenuItem(std::wstring, std::wstring, const Action&, EXPCMDSTATE = ECS_ENABLED, std::wstring = L"");
-    MenuItem(std::wstring, std::wstring, const SubCommands&, EXPCMDSTATE = ECS_ENABLED);
+	MenuItem();
+    MenuItem(EXPCMDFLAGS, std::wstring const&, std::wstring const&, EXPCMDSTATE, Action const&, SubCommands const&);
+    MenuItem(std::wstring const&, std::wstring const&, Action const&, EXPCMDSTATE = ECS_ENABLED);
+    MenuItem(std::wstring const&, std::wstring const&, SubCommands const&, EXPCMDSTATE = ECS_ENABLED);
 
-    IExplorerCommand* GetPtr() { return this; }
-
-    //IExplorerCommand
-    HRESULT __stdcall GetIcon(IShellItemArray*, LPWSTR*);
-    HRESULT __stdcall GetTitle(IShellItemArray*, LPWSTR*);
-    HRESULT __stdcall GetFlags(EXPCMDFLAGS*);
-    HRESULT __stdcall GetState(IShellItemArray*, BOOL, EXPCMDSTATE*);
-    HRESULT __stdcall GetToolTip(IShellItemArray*, LPWSTR*);
-    HRESULT __stdcall Invoke(IShellItemArray*, IBindCtx*);
-    HRESULT __stdcall EnumSubCommands(IEnumExplorerCommand**);
-    HRESULT __stdcall GetCanonicalName(GUID*);
+	//IExplorerCommand
+    HRESULT STDMETHODCALLTYPE GetTitle(IShellItemArray* psiItemArray, LPWSTR* ppszName);
+    HRESULT STDMETHODCALLTYPE GetIcon(IShellItemArray* psiItemArray, LPWSTR* ppszIcon);
+    HRESULT STDMETHODCALLTYPE GetToolTip(IShellItemArray* psiItemArray, LPWSTR* ppszInfotip);
+    HRESULT STDMETHODCALLTYPE GetCanonicalName(GUID* pguidCommandName);
+    HRESULT STDMETHODCALLTYPE GetState(IShellItemArray* psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE* pCmdState);
+    HRESULT STDMETHODCALLTYPE Invoke(IShellItemArray* psiItemArray, IBindCtx* pbc);
+    HRESULT STDMETHODCALLTYPE GetFlags(EXPCMDFLAGS* pFlags);
+    HRESULT STDMETHODCALLTYPE EnumSubCommands(IEnumExplorerCommand** ppEnum);
 
     //IEnumExplorerCommand
-    HRESULT __stdcall Next(ULONG, IExplorerCommand**, ULONG*);
-    HRESULT __stdcall Reset();
-    HRESULT __stdcall Clone(IEnumExplorerCommand**);
-    HRESULT __stdcall Skip(ULONG);
+    HRESULT STDMETHODCALLTYPE Next(ULONG celt, IExplorerCommand** pUICommand, ULONG* pceltFetched);
+    HRESULT STDMETHODCALLTYPE Skip(ULONG celt);
+    HRESULT STDMETHODCALLTYPE Reset();
+    HRESULT STDMETHODCALLTYPE Clone(IEnumExplorerCommand** ppenum);
 
-protected:
-    //Properties
-    std::wstring Icon{ L"" };
-    std::wstring Title{ L"" };
-    EXPCMDFLAGS Flags{ ECF_ISSEPARATOR };
 
-    EXPCMDSTATE CmdState{ ECS_ENABLED };
+    std::wstring m_Icon{ L"" };
+    std::wstring m_Title{ L"" };
 
-    std::wstring ToolTip{ L"" };
-
-    Action Event;
-
-    SubCommands SubCmds = {  };
+    EXPCMDFLAGS m_Flags{ ECF_ISSEPARATOR };
+    EXPCMDSTATE m_State{ ECS_ENABLED };
+    
+    Action m_Action{ nullptr };
+    SubCommands m_SubCommands{};
 
 private:
-    void CommonInit(std::wstring, std::wstring, EXPCMDSTATE);
-
-    ULONG i = 0;
+    ULONG m_Index{ 0 };
 };
