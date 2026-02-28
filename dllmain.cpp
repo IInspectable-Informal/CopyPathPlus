@@ -30,9 +30,9 @@ bool GetTheme()
     DWORD value{ 1 };
     if (RegOpenKeyExW(HKEY_CURRENT_USER, LR"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)", 0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS)
     {
-        static DWORD rtype{ REG_DWORD };
-        static DWORD size{ sizeof(value) };
-        if (RegQueryValueExW(key, L"AppUseLightTheme", nullptr, &rtype, reinterpret_cast<LPBYTE>(&value), &size) != ERROR_SUCCESS)
+        DWORD rtype{ REG_DWORD };
+        DWORD size{ sizeof(value) };
+        if (RegQueryValueExW(key, L"AppsUseLightTheme", nullptr, &rtype, reinterpret_cast<LPBYTE>(&value), &size) != ERROR_SUCCESS)
         { value = 1; }
         RegCloseKey(key);
     }
