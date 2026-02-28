@@ -6,10 +6,10 @@
 
 ## 效果图
 浅色模式：  
-![](https://github.com/IInspectable-Informal/CopyPathPlus/blob/main/screenshots/%E6%95%88%E6%9E%9C%E5%9B%BE%20-%20%E6%B5%85%E8%89%B2%E4%B8%BB%E9%A2%98.png)
+![](https://github.com/IInspectable-Informal/CopyPathPlus/blob/main/screenshots/ContextMenu.LightTheme.png)
 
 深色模式：  
-![](https://github.com/IInspectable-Informal/CopyPathPlus/blob/main/screenshots/%E6%95%88%E6%9E%9C%E5%9B%BE%20-%20%E6%B7%B1%E8%89%B2%E4%B8%BB%E9%A2%98.png)
+![](https://github.com/IInspectable-Informal/CopyPathPlus/blob/main/screenshots/ContextMenu.DarkTheme.png)
 
 ## 使用方法：
 > [!Note]
