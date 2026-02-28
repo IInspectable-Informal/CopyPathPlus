@@ -89,9 +89,9 @@ BEGIN
             VALUE "FileDescription", "增强版路径复制器"
             VALUE "FileVersion", "1.0.1.0"
             VALUE "InternalName", "CopyPathPlus.ShellExt.dll"
-            VALUE "LegalCopyright", "Copyright (C) 2024 - 2026"
+            VALUE "LegalCopyright", "Copyright (C) 2024 - 2026 IInspectable"
             VALUE "OriginalFilename", "CopyPathPlus.ShellExt.dll"
-            VALUE "ProductName", "TODO: <产品名>"
+            VALUE "ProductName", "TODO: 复制路径+"
             VALUE "ProductVersion", "1.0.1.0"
         END
     END
