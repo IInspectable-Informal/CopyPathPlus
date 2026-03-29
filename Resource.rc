@@ -86,12 +86,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "CompanyName", "IInspectable"
-            VALUE "FileDescription", "增强版路径复制器"
+            VALUE "FileDescription", "澧炲己鐗堣矾寰勫鍒跺櫒"
             VALUE "FileVersion", "1.0.1.0"
             VALUE "InternalName", "CopyPathPlus.ShellExt.dll"
             VALUE "LegalCopyright", "Copyright (C) 2024 - 2026 IInspectable"
             VALUE "OriginalFilename", "CopyPathPlus.ShellExt.dll"
-            VALUE "ProductName", "TODO: 复制路径+"
+            VALUE "ProductName", "澶嶅埗璺緞+"
             VALUE "ProductVersion", "1.0.1.0"
         END
     END
