@@ -14,7 +14,7 @@
 ## 使用方法：
 > [!Note]
 > 本项目基于 C++/WinRT 开发，因此不是所有的 Windows 操作系统都可以正常使用  
-> 最低 Windows 版本：Win10 1809（Build 17763）。
+> 建议使用 Win10 1809+（Build 17763+）。
 
-前往 [Releases](https://github.com/IInspectable-Informal/CopyPathPlus/releases) 下载最新版 [bin-CopyPathPlus.zip](https://github.com/IInspectable-Informal/CopyPathPlus/releases/download/v1.0.0/bin-CopyPathPlus.zip)，  
+前往 [Releases](https://github.com/IInspectable-Informal/CopyPathPlus/releases) ，根据你的 Windows 操作系统版本选择下载压缩包，  
 接着将下载的压缩包全部解压，按照说明操作即可使用。
